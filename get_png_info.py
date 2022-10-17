@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--filename", type=str, help="file to get PNG chunks info", required=True)
 parser.add_argument("-o", "--output-format", default="json_pretty", choices=["json", "object", "json_pretty"], help="format of output", required=False)
 
-def get_png_info(filename, output_format='text'):
+def get_png_info(filename, output_format='object'):
     image = Image.open(filename)
     existing_info = image.info or {}
     indent = 0

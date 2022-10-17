@@ -10,8 +10,12 @@ import glob
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 
-def tag_files(files_glob, tags=[], remove_tags=[], remove_all_tags=False):
-    files = glob.glob(files_glob)
+def tag_files(files_glob="", tags=[], remove_tags=[], remove_all_tags=False, filename=""):
+    if files_glob=="":
+        files = [filename]
+    else:
+        files = glob.glob(files_glob)
+
     for file in files:
         # get PROPERTYKEY for "System.Keywords"
         pk = propsys.PSGetPropertyKeyFromName("System.Keywords")
