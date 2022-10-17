@@ -16,11 +16,11 @@ python strip_png_info.py /path/to/file [/path/to/newfile]
 Removes the PNG Check Info from a PNG file
 
 ## Get PNG Chunk Info
-python get_png_info.py /path/to/file
+python get_png_info.py -f /path/to/file
 
-Outputs the PNG Chunk Info from a PNG file as JSON
+Outputs the PNG chunk info from a PNG file as pretty JSON
 
-## Add Tags to file (Windows only)
+## Add tags to file (Windows only)
 python add_tags.py -f *.png -t 'tag1,tag2'
 
 Uncomment pywin32 in requirements.txt and rerun installation steps. Adds list of tags and removes list of tags for a file that supports tags. Windows does not support tags for all file types. Recommend using [FileMeta](https://github.com/Dijji/FileMeta/releases) to allow PNG file tags.
