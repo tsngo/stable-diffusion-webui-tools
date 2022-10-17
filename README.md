@@ -3,7 +3,7 @@
 Various python and nodeJS scripts that are useful with this fork of
 [stable-diffusion-webui](https://github.com/tsngo/stable-diffusion-webui).
 
-Most tools will depend on the JSON parameter file output unless otherwise noted.
+Most tools are standalong but some depend on specific features in the forked version of stable-diffusion-webui.
 
 # Installation
 pip install -r requirements.txt
