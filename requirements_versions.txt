@@ -1,0 +1,3 @@
+pywin32==304
+Pillow==9.2.0
+piexif==1.1.3
