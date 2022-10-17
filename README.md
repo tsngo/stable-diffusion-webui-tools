@@ -28,6 +28,6 @@ Uncomment pywin32 in requirements.txt and rerun installation steps. Adds list of
 ## Remove orphaned param files
 python remove_orphan_params.py glob_pattern_to_param_files
 
-Deletes param files that orphaned (don't have a png or jpg image of the same filename). Example of glob patterns: */*.json or */*.txt
+Deletes param files that orphaned (don't have a png or jpg image of the same filename). Example of glob patterns: \*/\*.json or \*/\*.txt
 
 
