@@ -15,8 +15,8 @@ python strip_png_info.py /path/to/file [/path/to/newfile]
 
 Removes the PNG Check Info from a PNG file
 
-## Get PNG Chunk Info
-python get_png_info.py -f /path/to/file
+## Get PNG Chunk Info or EXIF
+python get_exif -f /path/to/file
 
 Outputs the PNG chunk info from a PNG file as pretty JSON
 
