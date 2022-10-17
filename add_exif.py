@@ -4,6 +4,7 @@ from PIL import Image, PngImagePlugin
 import os
 import base64
 import argparse
+from get_exif import get_exif
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -21,20 +22,20 @@ def add_exif(filename, params={}, remove_params=[], remove_all_params=False, out
     else:
         output_filename = os.path.realpath(output_filename)
 
-    image = Image.open(filename)
-    if len(params) > 0:
-        existing_info = image.info or {}
-        pnginfo = PngImagePlugin.PngInfo()
+    with Image.open(filename) as image:
+        if len(params) > 0:
+            existing_info = image.info or {}
+            pnginfo = PngImagePlugin.PngInfo()
 
-        if existing_info is not None:
-            for k, v in existing_info.items():
-                if k in params or k in remove_params:
-                    continue
+            if existing_info is not None or remove_all_params:
+                for k, v in existing_info.items():
+                    if k in params or k in remove_params:
+                        continue
+                    pnginfo.add_text(k, str(v))
+
+            for k, v in params.items():
                 pnginfo.add_text(k, str(v))
-
-        for k, v in params.items():
-            pnginfo.add_text(k, str(v))
-    image.save(output_filename, pnginfo=pnginfo)
+        image.save(output_filename, pnginfo=pnginfo)
 
 if __name__ == "__main__":
     args = parser.parse_args()

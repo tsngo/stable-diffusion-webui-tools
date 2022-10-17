@@ -13,7 +13,7 @@ if __name__ == "__main__":
         print(f"python {__file__} /path/to/file [/path/to/newfile]")
         sys.exit(1)
     
-    image = Image.open(filename)
-    image.save(newfilename)
+    with Image.open(filename) as image:
+        image.save(newfilename)
 
 

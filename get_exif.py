@@ -39,16 +39,15 @@ def extract_exif(image):
     return items
 
 def get_exif(filename, output_format='object'):
-    image = Image.open(filename)
-    
-    existing_info = extract_exif(image)
+    with Image.open(filename) as image:    
+        existing_info = extract_exif(image)
 
-    indent = 0
-    if output_format == "json_pretty":
-        indent = 4
-    if output_format == "json" or output_format == "json_pretty":
-        existing_info = json.dumps(existing_info, indent=indent)
-    return existing_info
+        indent = 0
+        if output_format == "json_pretty":
+            indent = 4
+        if output_format == "json" or output_format == "json_pretty":
+            existing_info = json.dumps(existing_info, indent=indent)
+        return existing_info
 
 if __name__ == "__main__":
     args = parser.parse_args()
