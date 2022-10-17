@@ -21,9 +21,9 @@ python get_png_info.py /path/to/file
 Outputs the PNG Chunk Info from a PNG file as JSON
 
 ## Add Tags to file (Windows only)
-python add_tags.py /path/to/file csv_of_tags [cvs_tags_to_remove]
+python add_tags.py -f *.png -t 'tag1,tag2'
 
-Uncomment pywin32 in requirements.txt and rerun installation steps. Adds list of tags and removes list of tags for a file that supports tags. Recommend using [FileMeta](https://github.com/Dijji/FileMeta/releases) to allow PNG file tags.
+Uncomment pywin32 in requirements.txt and rerun installation steps. Adds list of tags and removes list of tags for a file that supports tags. Windows does not support tags for all file types. Recommend using [FileMeta](https://github.com/Dijji/FileMeta/releases) to allow PNG file tags.
 
 ## Remove orphaned param files
 python remove_orphan_params.py glob_pattern_to_param_files
