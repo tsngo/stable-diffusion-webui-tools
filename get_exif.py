@@ -4,6 +4,7 @@ import sys
 from PIL import Image
 import os
 import piexif
+import piexif.helper
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -29,14 +30,7 @@ def extract_exif(image):
     except ValueError:
         exif_comment = exif_comment.decode('utf8', errors="ignore")
 
-    items['exif comment'] = exif_comment
-    geninfo = exif_comment
-
-    for field in ['jfif', 'jfif_version', 'jfif_unit', 'jfif_density', 'dpi', 'exif',
-                    'loop', 'background', 'timestamp', 'duration']:
-        items.pop(field, None)
-
-    return items
+    return exif_comment
 
 def get_exif(filename, output_format='object'):
     with Image.open(filename) as image:    
