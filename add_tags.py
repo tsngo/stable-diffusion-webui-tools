@@ -7,16 +7,17 @@ from win32com.shell import shellcon
 import os
 
 script_path = os.path.dirname(os.path.realpath(__file__))
-try:
-    filename = os.path.realpath(sys.argv[1])
-    tags = sys.argv[2].split(',')
-    if len(sys.argv) == 4:
-        remove_tags = sys.argv[3].split(',')
-except:
-    print(f"python {__file__} /path/to/file csv_of_tags [cvs_tags_to_remove]")
-    sys.exit(1)
 
 if __name__ == "__main__":
+    try:
+        filename = os.path.realpath(sys.argv[1])
+        tags = sys.argv[2].split(',')
+        if len(sys.argv) == 4:
+            remove_tags = sys.argv[3].split(',')
+    except:
+        print(f"python {__file__} /path/to/file csv_of_tags [cvs_tags_to_remove]")
+        sys.exit(1)
+    
     # get PROPERTYKEY for "System.Keywords"
     pk = propsys.PSGetPropertyKeyFromName("System.Keywords")
 
