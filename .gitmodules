@@ -1,0 +1,3 @@
+[submodule "iqa"]
+	path = iqa
+	url = git@github.com:tsngo/image-quality-assessment.git

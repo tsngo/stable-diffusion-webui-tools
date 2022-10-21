@@ -15,7 +15,39 @@ import glob
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 
-def tag_files(files_glob="", tags=[], remove_tags=[], remove_all_tags=False, filename=""):
+def set_property(file="", property="System.Keywords", values=[], remove_values=[], remove_all=False, ps=None):
+    array_properties = ["System.Keywords", "System.Category"]
+    pk = propsys.PSGetPropertyKeyFromName(property)
+    # get property store for a given shell item (here a file)
+    if (ps is None):
+        try:
+            ps = propsys.SHGetPropertyStoreFromParsingName(os.path.realpath(file), None, shellcon.GPS_READWRITE, propsys.IID_IPropertyStore)
+        except:
+            pythoncom.CoInitialize()
+            ps = propsys.SHGetPropertyStoreFromParsingName(os.path.realpath(file), None, shellcon.GPS_READWRITE, propsys.IID_IPropertyStore)
+
+    if property in array_properties:
+        # read & print existing (or not) property value, System.Keywords type is an array of string
+        existingValues = ps.GetValue(pk).GetValue()
+        if existingValues == None:
+            existingValues = []
+        filteredValues = []
+
+        if not remove_all:
+            for value in existingValues:
+                if value in remove_values:
+                    continue
+                filteredValues.append(value)
+
+        # build an array of string type PROPVARIANT
+        newValue = propsys.PROPVARIANTType(filteredValues + values, pythoncom.VT_VECTOR | pythoncom.VT_BSTR)
+
+        # write property
+        ps.SetValue(pk, newValue)
+    
+    return ps
+
+def tag_files(files_glob="", tags=[], remove_tags=[], remove_all_tags=False, filename="", comment="", categories=[], remove_categories=[], remove_all_categories=False):
     if propsys == None or shellcon == None:
         return
 
@@ -25,42 +57,18 @@ def tag_files(files_glob="", tags=[], remove_tags=[], remove_all_tags=False, fil
         files = glob.glob(files_glob)
 
     for file in files:
-        # get property store for a given shell item (here a file)
-        try:
-            ps = propsys.SHGetPropertyStoreFromParsingName(os.path.realpath(file), None, shellcon.GPS_READWRITE, propsys.IID_IPropertyStore)
-        except:
-            pythoncom.CoInitialize()
-            ps = propsys.SHGetPropertyStoreFromParsingName(os.path.realpath(file), None, shellcon.GPS_READWRITE, propsys.IID_IPropertyStore)
-            
-        pk = propsys.PSGetPropertyKeyFromName("System.Keywords")
-
-        # read & print existing (or not) property value, System.Keywords type is an array of string
-        existingTags = ps.GetValue(pk).GetValue()
-        if existingTags == None:
-            existingTags = []
-        filteredTags = []
-
-        if not remove_all_tags:
-            for tag in existingTags:
-                if tag in remove_tags:
-                    continue
-                filteredTags.append(tag)
-
-        # build an array of string type PROPVARIANT
-        newValue = propsys.PROPVARIANTType(
-            filteredTags + tags, pythoncom.VT_VECTOR | pythoncom.VT_BSTR)
-
-        # write property
-        ps.SetValue(pk, newValue)
+        ps = set_property(file=file, property="System.Keywords", values=tags, remove_values=remove_tags, remove_all=remove_all_tags)
+        ps = set_property(file=file, property="System.Category", values=categories, remove_values=remove_categories, remove_all=remove_all_categories, ps=ps)
         ps.Commit()
-
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--files-glob", type=str, default="", help="glob pattern to files to tag", required=True)
 parser.add_argument("-t", "--tags", type=str, default="", help="comma separated list of tags", required=False)
 parser.add_argument("-r", "--remove-tags", type=str, default="", help="comma separated list of tags to remove", required=False)
-parser.add_argument("-rt", "--remove-all-tags", action="store_true", help="remove all tags", required=False)
+parser.add_argument("-c", "--categories", type=str, default="", help="comma separated list of categories add", required=False)
+parser.add_argument("-rc", "--remove-categories", type=str, default="", help="comma separated list of categories to remove", required=False)
+parser.add_argument("-rt", "--remove-all-tags", action="store_true", default=False, help="remove all tags", required=False)
+parser.add_argument("-rac", "--remove-all-categories", action="store_true", default=False, help="remove all tags", required=False)
 
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -70,9 +78,14 @@ if __name__ == "__main__":
     else:
         args.tags = args.tags.split(',')
 
-    if args.remove_tags == "":
-        args.remove_tags = []
+    if args.categories == "":
+        args.categories = []
     else:
-        args.remove_tags = args.remove_tags.split(',')
+        args.categories = args.categories.split(',')
+
+    if args.remove_categories == "":
+        args.remove_categories = []
+    else:
+        args.remove_categories = args.remove_categories.split(',')
     
     tag_files(**args.__dict__)
