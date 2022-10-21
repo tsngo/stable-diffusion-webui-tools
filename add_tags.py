@@ -17,14 +17,15 @@ script_path = os.path.dirname(os.path.realpath(__file__))
 
 def set_property(file="", property="System.Keywords", values=[], remove_values=[], remove_all=False, ps=None):
     array_properties = ["System.Keywords", "System.Category"]
-    pk = propsys.PSGetPropertyKeyFromName(property)
     # get property store for a given shell item (here a file)
+    try:
+        pk = propsys.PSGetPropertyKeyFromName(property)
+    except:
+        pythoncom.CoInitialize()
+        pk = propsys.PSGetPropertyKeyFromName(property)
+
     if (ps is None):
-        try:
-            ps = propsys.SHGetPropertyStoreFromParsingName(os.path.realpath(file), None, shellcon.GPS_READWRITE, propsys.IID_IPropertyStore)
-        except:
-            pythoncom.CoInitialize()
-            ps = propsys.SHGetPropertyStoreFromParsingName(os.path.realpath(file), None, shellcon.GPS_READWRITE, propsys.IID_IPropertyStore)
+        ps = propsys.SHGetPropertyStoreFromParsingName(os.path.realpath(file), None, shellcon.GPS_READWRITE, propsys.IID_IPropertyStore)
 
     if property in array_properties:
         # read & print existing (or not) property value, System.Keywords type is an array of string
