@@ -58,8 +58,16 @@ def tag_files(files_glob="", tags=[], remove_tags=[], remove_all_tags=False, fil
         files = glob.glob(files_glob)
 
     for file in files:
-        ps = set_property(file=file, property="System.Keywords", values=tags, remove_values=remove_tags, remove_all=remove_all_tags)
-        ps = set_property(file=file, property="System.Category", values=categories, remove_values=remove_categories, remove_all=remove_all_categories, ps=ps)
+        try:
+            ps = set_property(file=file, property="System.Keywords", values=tags,
+                              remove_values=remove_tags, remove_all=remove_all_tags)
+        except:
+            pass
+        try:
+            ps = set_property(file=file, property="System.Category", values=categories,
+                              remove_values=remove_categories, remove_all=remove_all_categories, ps=ps)
+        except:
+            pass
         ps.Commit()
 
 parser = argparse.ArgumentParser()
