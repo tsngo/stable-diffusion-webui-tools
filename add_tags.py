@@ -53,7 +53,7 @@ def tag_files(files_glob="", tags=[], remove_tags=[], remove_all_tags=False, fil
         return
 
     if files_glob=="":
-        files = [filename]
+        files = [os.path.realpath(filename)]
     else:
         files = glob.glob(files_glob)
 
