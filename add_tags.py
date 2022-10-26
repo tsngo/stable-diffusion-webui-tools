@@ -61,14 +61,11 @@ def tag_files(files_glob="", tags=[], remove_tags=[], remove_all_tags=False, fil
         try:
             ps = set_property(file=file, property="System.Keywords", values=tags,
                               remove_values=remove_tags, remove_all=remove_all_tags)
-        except:
-            pass
-        try:
             ps = set_property(file=file, property="System.Category", values=categories,
                               remove_values=remove_categories, remove_all=remove_all_categories, ps=ps)
+            ps.Commit()
         except:
             pass
-        ps.Commit()
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--files-glob", type=str, default="", help="glob pattern to files to tag", required=True)
