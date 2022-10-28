@@ -17,6 +17,8 @@ script_path = os.path.dirname(os.path.realpath(__file__))
 
 def set_property(file="", property="System.Keywords", values=[], remove_values=[], remove_all=False, ps=None):
     array_properties = ["System.Keywords", "System.Category"]
+    if len(values) == 0 and len(remove_values) == 0 and not remove_all:
+        return ps
     # get property store for a given shell item (here a file)
     try:
         pk = propsys.PSGetPropertyKeyFromName(property)
@@ -48,7 +50,7 @@ def set_property(file="", property="System.Keywords", values=[], remove_values=[
     
     return ps
 
-def tag_files(files_glob="", tags=[], remove_tags=[], remove_all_tags=False, filename="", comment="", categories=[], remove_categories=[], remove_all_categories=False):
+def tag_files(files_glob="", tags=[], remove_tags=[], remove_all_tags=False, filename="", comment="", categories=[], remove_categories=[], remove_all_categories=False, log_prefix=""):
     if propsys == None or shellcon == None:
         return
 
@@ -65,7 +67,7 @@ def tag_files(files_glob="", tags=[], remove_tags=[], remove_all_tags=False, fil
                               remove_values=remove_categories, remove_all=remove_all_categories, ps=ps)
             ps.Commit()
         except:
-            pass
+            print(f"{log_prefix}Unable to write tag or category for {file}")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--files-glob", type=str, default="", help="glob pattern to files to tag", required=True)
